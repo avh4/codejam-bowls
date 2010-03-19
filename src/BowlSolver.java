@@ -1,7 +1,8 @@
 public class BowlSolver {
 
     public String solve(String input) {
-        return "Case #1: 2\n";
+        int recipes = input.split("\n").length - 1;
+        return "Case #1: " + recipes + "\n";
     }
 
 }
