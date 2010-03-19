@@ -47,12 +47,26 @@ public class BowlProblemTest {
     @Test
     public void googleSample1() {
         String input = "1\n" // 1 test case
-                + "3\n" // 2 recipes
+                + "3\n" // 3 recipes
                 + "SOUP 3 STOCK salt water\n"
                 + "STOCK 2 chicken VEGETABLES\n"
                 + "VEGETABLES 2 celery onions\n";
 
         String output = "Case #1: 2\n";
+        assertEquals(output, mBowlSolver.solve(input));
+    }
+
+    @Test
+    public void googleSample2() {
+        String input = "1\n" // 1 test case
+                + "5\n" // 5 recipes
+                + "MILKSHAKE 4 milk icecream FLAVOR FRUIT\n"
+                + "FRUIT 2 banana berries\n"
+                + "FLAVOR 2 SPICES CHOCOLATE\n"
+                + "SPICES 2 nutmeg cinnamon\n"
+                + "CHOCOLATE 2 cocoa syrup\n";
+
+        String output = "Case #1: 3\n";
         assertEquals(output, mBowlSolver.solve(input));
     }
 }
