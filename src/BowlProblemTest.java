@@ -31,4 +31,16 @@ public class BowlProblemTest {
         String output = "Case #1: 2\n";
         assertEquals(output, mBowlSolver.solve(input));
     }
+
+    @Test
+    public void submixtureWithTwoSubsubs() {
+        String input = "1\n" // 1 test case
+                + "4" // 2 recipes
+                + "SANDWICH 2 meat FILLING\n" + "FILLING 2 BREAD CHEESE\n"
+                + "BREAD 2 wheat salt\n"
+                + "CHEESE 2 milk mold\n";
+
+        String output = "Case #1: 3\n";
+        assertEquals(output, mBowlSolver.solve(input));
+    }
 }
