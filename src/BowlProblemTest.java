@@ -15,7 +15,7 @@ public class BowlProblemTest {
     @Test
     public void simplestMixture() {
         String input = "1\n" // 1 test case
-                + "1" // 1 recipe
+                + "1\n" // 1 recipe
                 + "SANDWICH 2 peanuts fruit\n";
 
         String output = "Case #1: 1\n";
@@ -25,7 +25,7 @@ public class BowlProblemTest {
     @Test
     public void mixtureWithSubmixture() {
         String input = "1\n" // 1 test case
-                + "2" // 2 recipes
+                + "2\n" // 2 recipes
                 + "SANDWICH 2 meat FILLING\n" + "FILLING 2 bread cheese\n";
 
         String output = "Case #1: 2\n";
@@ -35,12 +35,24 @@ public class BowlProblemTest {
     @Test
     public void submixtureWithTwoSubsubs() {
         String input = "1\n" // 1 test case
-                + "4" // 2 recipes
+                + "4\n" // 2 recipes
                 + "SANDWICH 2 meat FILLING\n" + "FILLING 2 BREAD CHEESE\n"
                 + "BREAD 2 wheat salt\n"
                 + "CHEESE 2 milk mold\n";
 
         String output = "Case #1: 3\n";
+        assertEquals(output, mBowlSolver.solve(input));
+    }
+
+    @Test
+    public void googleSample1() {
+        String input = "1\n" // 1 test case
+                + "3\n" // 2 recipes
+                + "SOUP 3 STOCK salt water\n"
+                + "STOCK 2 chicken VEGETABLES\n"
+                + "VEGETABLES 2 celery onions\n";
+
+        String output = "Case #1: 2\n";
         assertEquals(output, mBowlSolver.solve(input));
     }
 }
