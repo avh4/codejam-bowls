@@ -3,6 +3,8 @@ import static junit.framework.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 public class BowlProblemTest {
 
     private BowlSolver mBowlSolver;
@@ -13,7 +15,7 @@ public class BowlProblemTest {
     }
 
     @Test
-    public void simplestMixture() {
+    public void simplestMixture() throws NumberFormatException, Exception {
         String input = "1\n" // 1 test case
                 + recipes(1) + "SANDWICH 2 peanuts fruit\n";
 
@@ -22,7 +24,18 @@ public class BowlProblemTest {
     }
 
     @Test
-    public void mixtureWithSubmixture() {
+    public void twoTestCases() throws NumberFormatException, IOException {
+        String input = "2\n" // 1 test case
+                + recipes(1) + "SANDWICH 2 peanuts fruit\n"
+                + recipes(1)
+                + "HANDWICH 2 peanuts fruit\n";
+
+        String output = "Case #1: 1\n" + "Case #2: 1\n";
+        assertEquals(output, mBowlSolver.solve(input));
+    }
+
+    @Test
+    public void mixtureWithSubmixture() throws NumberFormatException, IOException {
         String input = "1\n" // 1 test case
                 + recipes(2) + "SANDWICH 2 meat FILLING\n" + "FILLING 2 bread cheese\n";
 
@@ -31,7 +44,7 @@ public class BowlProblemTest {
     }
 
     @Test
-    public void submixtureWithTwoSubsubs() {
+    public void submixtureWithTwoSubsubs() throws NumberFormatException, IOException {
         String input = "1\n" // 1 test case
                 + recipes(4) + "SANDWICH 2 meat FILLING\n"
                 + "FILLING 2 BREAD CHEESE\n"
@@ -42,7 +55,7 @@ public class BowlProblemTest {
     }
 
     @Test
-    public void googleSample1() {
+    public void googleSample1() throws NumberFormatException, IOException {
         String input = "1\n" // 1 test case
                 + recipes(3) + "SOUP 3 STOCK salt water\n"
                 + "STOCK 2 chicken VEGETABLES\n"
@@ -53,7 +66,7 @@ public class BowlProblemTest {
     }
 
     @Test
-    public void googleSample2() {
+    public void googleSample2() throws NumberFormatException, IOException {
         String input = "1\n" // 1 test case
                 + recipes(5)
                 + "MILKSHAKE 4 milk icecream FLAVOR FRUIT\n"
@@ -66,7 +79,7 @@ public class BowlProblemTest {
     }
 
     @Test
-    public void constrainedByIngredientMixingPre() {
+    public void constrainedByIngredientMixingPre() throws NumberFormatException, IOException {
         String input = "1\n" // comment
                 + recipes(4) //
                 + "AA 3 AAA AAB AAC\n" //
@@ -77,11 +90,10 @@ public class BowlProblemTest {
 
         String output = "Case #1: 4\n";
         assertEquals(output, mBowlSolver.solve(input));
-
     }
 
     @Test
-    public void constrainedByIngredientMixing() {
+    public void constrainedByIngredientMixing() throws NumberFormatException, IOException {
         String input = "1\n" // comment
                 + recipes(9) //
                 + "A 3 AA AB\n" //
@@ -97,7 +109,6 @@ public class BowlProblemTest {
 
         String output = "Case #1: 5\n";
         assertEquals(output, mBowlSolver.solve(input));
-
     }
 
     private String recipes(final int n) {

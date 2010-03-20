@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,9 +13,25 @@ public class BowlSolver {
 
     Map<String, Integer> mBowlsRequired = new HashMap<String, Integer>();
 
-    public String solve(String input) {
-        List<String> recipes = new ArrayList<String>(Arrays.asList(input.split("\n")));
-        recipes.remove(1);
+    public String solve(String input) throws NumberFormatException, IOException {
+        BufferedReader r = new BufferedReader(new StringReader(input));
+        int cases = Integer.parseInt(r.readLine());
+
+        StringBuilder output = new StringBuilder();
+
+        for (int i = 0; i < cases; i++) {
+
+            final String recipeInput = readNextCase(r);
+            final int answer = solveCase(recipeInput);
+
+            output.append("Case #" + (i + 1) + ": " + answer + "\n");
+        }
+
+        return output.toString();
+    }
+
+    private int solveCase(final String recipeInput) {
+        List<String> recipes = new ArrayList<String>(Arrays.asList(recipeInput.split("\n")));
         recipes.remove(0);
         for (String recipe : recipes) {
             final String name = parseName(recipe);
@@ -23,7 +42,20 @@ public class BowlSolver {
         for (String recipe : mRecipeToSubmixtures.keySet()) {
             bowlsForRecipeList = Math.max(bowlsForRecipeList, numberOfBowlsForRecipe(recipe));
         }
-        return "Case #1: " + bowlsForRecipeList + "\n";
+        return bowlsForRecipeList;
+    }
+
+    private String readNextCase(BufferedReader r) throws IOException {
+        String firstLine = r.readLine();
+        int lines = Integer.parseInt(firstLine);
+        StringBuilder s = new StringBuilder();
+        s.append(firstLine + "\n");
+        for (int l = 0; l < lines; l++) {
+            s.append(r.readLine() + "\n");
+        }
+
+        final String recipeInput = s.toString();
+        return recipeInput;
     }
 
     private String parseName(String recipe) {
