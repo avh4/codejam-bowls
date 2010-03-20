@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class BowlSolver {
 
-    Map<String, List<String>> mIngredientsMap = new HashMap<String, List<String>>();
+    Map<String, List<String>> mRecipeToSubmixtures = new HashMap<String, List<String>>();
 
     Map<String, Integer> mBowlsRequired = new HashMap<String, Integer>();
 
@@ -16,11 +16,11 @@ public class BowlSolver {
         recipes.remove(0);
         for (String recipe : recipes) {
             final String name = parseName(recipe);
-            List<String> ingredients = parseIngredients(recipe);
-            mIngredientsMap.put(name, ingredients);
+            List<String> ingredients = parseSubmixtures(recipe);
+            mRecipeToSubmixtures.put(name, ingredients);
         }
         int bowlsForRecipeList = -1;
-        for (String recipe : mIngredientsMap.keySet()) {
+        for (String recipe : mRecipeToSubmixtures.keySet()) {
             bowlsForRecipeList = Math.max(bowlsForRecipeList, numberOfBowlsForRecipe(recipe));
         }
         return "Case #1: " + bowlsForRecipeList + "\n";
@@ -30,11 +30,15 @@ public class BowlSolver {
         return recipe.split(" ")[0];
     }
 
-    private List<String> parseIngredients(String recipe) {
-        List<String> ingredients = new ArrayList<String>(Arrays.asList(recipe.split(" ")));
-        ingredients.remove(1);
-        ingredients.remove(0);
-        return ingredients;
+    private List<String> parseSubmixtures(String recipe) {
+        String[] ingredients = recipe.split(" ");
+        List<String> submixtures = new ArrayList<String>();
+        for (int i = 2; i < ingredients.length; i++) {
+            if (Character.isUpperCase(ingredients[i].charAt(0))) {
+                submixtures.add(ingredients[i]);
+            }
+        }
+        return submixtures;
     }
 
     private int numberOfBowlsForRecipe(String recipe) {
@@ -43,16 +47,49 @@ public class BowlSolver {
             return mBowlsRequired.get(recipe);
         }
 
-        // Calculate if the value wasn't already cached
-        int bowlsForRecipe = 1; // We need one bowl to hold the resulting
-                                // mixture
-        for (String word : mIngredientsMap.get(recipe)) {
-            if (Character.isUpperCase(word.charAt(0))) {
-                bowlsForRecipe += 1;
-            }
+        RecipePlan bowlPlan = createPlan(recipe);
+        int bowls = executeRecipe(bowlPlan);
+
+        // Store the result in the cache
+        mBowlsRequired.put(recipe, bowls);
+        return bowls;
+    }
+
+    /**
+     * Create an execution plan for the given recipe. The execution plan
+     * includes information about how many bowls will be required to create each
+     * of the mixtures required by the recipe.
+     * 
+     * @see executeRecipe
+     */
+    private RecipePlan createPlan(String recipe) {
+        // Find out how many bowls it takes to make each of the mixtures
+        List<String> mixtures = mRecipeToSubmixtures.get(recipe);
+        RecipePlan bowlPlan = new RecipePlan();
+        int[] bowlsForMixture = bowlPlan.plan = new int[mixtures.size() + 1];
+        // This last bowl is for the recipe we are currently making
+        bowlsForMixture[mixtures.size()] = 1;
+        for (int i = 0; i < mixtures.size(); i++) {
+            bowlsForMixture[i] = numberOfBowlsForRecipe(mixtures.get(i));
         }
-        mBowlsRequired.put(recipe, bowlsForRecipe);
-        return bowlsForRecipe;
+        Arrays.sort(bowlsForMixture);
+        return bowlPlan;
+    }
+
+    private static int executeRecipe(RecipePlan bowlPlan) {
+        // Make the mixtures: we start with the "most difficult" mixtures and
+        // work backwards. After each mixture, we will need one bowl reserved to
+        // hold it while we make the remaining mixtures
+        int[] bowlsForStep = new int[bowlPlan.plan.length];
+        final int length = bowlsForStep.length;
+        for (int i = 0; i < length; i++) {
+            bowlsForStep[i] = bowlPlan.plan[length - 1 - i] + i;
+        }
+
+        // Take the max from bowlsForStep
+        Arrays.sort(bowlsForStep);
+        int bowls = bowlsForStep[bowlsForStep.length - 1];
+        return bowls;
     }
 
 }
