@@ -1,8 +1,14 @@
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class BowlProblemTest {
@@ -32,6 +38,26 @@ public class BowlProblemTest {
 
         String output = "Case #1: 1\n" + "Case #2: 1\n";
         assertEquals(output, mBowlSolver.solve(input));
+    }
+
+    private static String readFileAsString(String filePath) throws IOException {
+        byte[] buffer = new byte[(int) new File(filePath).length()];
+        BufferedInputStream f = new BufferedInputStream(new FileInputStream(filePath));
+        f.read(buffer);
+        return new String(buffer);
+    }
+
+    @Test
+    public void readWriteFromFiles() throws IOException {
+        try {
+            new File("A-sample.out").delete();
+            assertFalse("Case #1: 2\nCase #2: 3\n".equals(readFileAsString("A-sample.out")));
+        } catch (FileNotFoundException e) {
+            // Okay, we don't want the file to be there
+        }
+        mBowlSolver.solveFile("A-sample");
+        assertEquals("Case #1: 2\nCase #2: 3\n", readFileAsString("A-sample.out"));
+        assertTrue("Case #1: 2\nCase #2: 3\n".equals(readFileAsString("A-sample.out")));
     }
 
     @Test

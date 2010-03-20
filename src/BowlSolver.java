@@ -1,4 +1,9 @@
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -122,6 +127,26 @@ public class BowlSolver {
         Arrays.sort(bowlsForStep);
         int bowls = bowlsForStep[bowlsForStep.length - 1];
         return bowls;
+    }
+
+    public void solveFile(String file) {
+        try {
+            String input = readFileAsString(file + ".in");
+            String output = solve(input);
+            BufferedWriter out = new BufferedWriter(new FileWriter(file + ".out"));
+            out.write(output);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String readFileAsString(String filePath) throws java.io.IOException {
+        byte[] buffer = new byte[(int) new File(filePath).length()];
+        BufferedInputStream f = new BufferedInputStream(new FileInputStream(filePath));
+        f.read(buffer);
+        return new String(buffer);
     }
 
 }
