@@ -13,11 +13,11 @@ import java.io.IOException;
 
 public class BowlProblemTest {
 
-    private BowlSolver mBowlSolver;
+    private BowlProblemSetSolver mBowlSolver;
 
     @Before
     public void setUp() throws Exception {
-        mBowlSolver = new BowlSolver();
+        mBowlSolver = new BowlProblemSetSolver();
     }
 
     @Test
@@ -37,6 +37,24 @@ public class BowlProblemTest {
                 + "HANDWICH 2 peanuts fruit\n";
 
         String output = "Case #1: 1\n" + "Case #2: 1\n";
+        assertEquals(output, mBowlSolver.solve(input));
+    }
+
+    /**
+     * The solver must reset its recipe map and bowl count cache between each
+     * recipe, otherwise it will give the wrong results if a subsequent test
+     * case has a solution which is smaller than a previous test case.
+     */
+    @Test
+    public void shouldResetBetweenCases() throws NumberFormatException, IOException {
+        String input = "2\n" //
+                + recipes(3) //
+                + "SOUP 3 STOCK salt water\n"
+                + "STOCK 2 chicken VEGETABLES\n"
+                + "VEGETABLES 2 celery onions\n" //
+                + "1\n" + "A 2 aa ab\n";
+
+        String output = "Case #1: 2\n" + "Case #2: 1\n";
         assertEquals(output, mBowlSolver.solve(input));
     }
 
